@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CampusEats – Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .demo-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .demo-section p {
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .demo-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .demo-btn {
+      padding: 10px 8px;
+      border-radius: 10px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: center;
+      color: #475569;
+    }
+    .demo-btn:hover {
+      border-color: #f97316;
+      background: #fff7ed;
+      color: #f97316;
+      transform: translateY(-1px);
+    }
+    .demo-btn .demo-icon {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .demo-btn .demo-role {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body class="auth-body">
+
+  <div class="auth-card">
+
+    <div class="auth-logo">🍱</div>
+    <h1 class="auth-title">CampusEats</h1>
+    <p class="auth-subtitle">Order food & more on campus</p>
+
+    <!-- Tab Buttons -->
+    <div style="display:flex; gap:8px; margin-bottom:20px;">
+      <button onclick="showTab('login')" id="tab-login"
+        style="flex:1; padding:10px; border-radius:10px; border:1.5px solid #f97316; background:#f97316; color:white; font-weight:600; cursor:pointer;">
+        Login
+      </button>
+      <button onclick="showTab('register')" id="tab-register"
+        style="flex:1; padding:10px; border-radius:10px; border:1.5px solid #e2e8f0; background:white; color:#94a3b8; font-weight:600; cursor:pointer;">
+        Register
+      </button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@college.edu" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" />
+      </div>
+      <div class="form-group">
+        <label>Login as</label>
+        <select id="role">
+          <option value="customer">Customer (Student / Staff)</option>
+          <option value="vendor">Vendor</option>
+          <option value="agent">Delivery Agent</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="handleLogin()">Login →</button>
+
+      <!-- DEMO LOGIN SECTION -->
+      <div class="demo-section">
+        <p>⚡ Quick Demo Login</p>
+        <div class="demo-buttons">
+          <button class="demo-btn" onclick="demoLogin('student@campus.edu','demo1234','customer')">
+            <span class="demo-icon">🎓</span>
+            Student
+            <span class="demo-role">customer</span>
+          </button>
+          <button class="demo-btn" onclick="demoLogin('vendor@campus.edu','demo1234','vendor')">
+            <span class="demo-icon">👨‍🍳</span>
+            Vendor
+            <span class="demo-role">cafeteria</span>
+          </button>
+          <button class="demo-btn" onclick="demoLogin('agent@campus.edu','demo1234','agent')">
+            <span class="demo-icon">🛵</span>
+            Agent
+            <span class="demo-role">delivery</span>
+          </button>
+          <button class="demo-btn" onclick="demoLogin('admin@campus.edu','demo1234','admin')">
+            <span class="demo-icon">🛡️</span>
+            Admin
+            <span class="demo-role">dashboard</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="register-form" style="display:none;">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="reg-name" placeholder="Your full name" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@college.edu" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="••••••••" />
+      </div>
+      <div class="form-group">
+        <label>Register as</label>
+        <select id="reg-role">
+          <option value="customer">Customer (Student / Staff)</option>
+          <option value="vendor">Vendor</option>
+          <option value="agent">Delivery Agent</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="handleRegister()">Create Account →</button>
+    </div>
+
+    <p id="auth-msg" style="text-align:center; margin-top:14px; font-size:13px; color:#f97316;"></p>
+
+  </div>
+
+  <script>
+    const API = '/api';
+
+    function showTab(tab) {
+      document.getElementById('login-form').style.display    = tab === 'login'    ? 'block' : 'none';
+      document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('tab-login').style.background    = tab === 'login'    ? '#f97316' : 'white';
+      document.getElementById('tab-login').style.color         = tab === 'login'    ? 'white'   : '#94a3b8';
+      document.getElementById('tab-register').style.background = tab === 'register' ? '#f97316' : 'white';
+      document.getElementById('tab-register').style.color      = tab === 'register' ? 'white'   : '#94a3b8';
+    }
+
+    function showMsg(msg) {
+      document.getElementById('auth-msg').textContent = msg;
+    }
+
+    // Demo login — fills in credentials and logs in automatically
+    function demoLogin(email, password, role) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+      document.getElementById('role').value = role;
+      handleLogin();
+    }
+
+    function handleLogin() {
+      const email    = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role     = document.getElementById('role').value;
+
+      if (!email || !password) { showMsg('Please fill in all fields!'); return; }
+
+      showMsg('Logging in...');
+
+      fetch(API + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) { showMsg('❌ ' + data.error); return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showMsg('✅ Welcome ' + data.user.name + '!');
+        setTimeout(() => {
+          if (role === 'vendor')      window.location.href = 'vendor.html';
+          else if (role === 'agent')  window.location.href = 'agent.html';
+          else if (role === 'admin')  window.location.href = 'admin.html';
+          else                        window.location.href = 'home.html';
+        }, 800);
+      })
+      .catch(() => showMsg('❌ Backend not running! Keep terminal open.'));
+    }
+
+    function handleRegister() {
+      const name     = document.getElementById('reg-name').value;
+      const email    = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const role     = document.getElementById('reg-role').value;
+
+      if (!name || !email || !password) { showMsg('Please fill in all fields!'); return; }
+
+      showMsg('Creating account...');
+
+      fetch(API + '/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, role })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) { showMsg('❌ ' + data.error); return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showMsg('✅ Account created! Welcome ' + data.user.name);
+        setTimeout(() => window.location.href = 'home.html', 800);
+      })
+      .catch(() => showMsg('❌ Backend not running! Keep terminal open.'));
+    }
+  </script>
+
+</body>
+</html>

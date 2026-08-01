@@ -1,31 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+const { pool } = require('../database');
 
 // GET all products
-router.get('/', (req, res) => {
-  const { category } = req.query;
-  let products;
+router.get('/', async (req, res) => {
+  try {
+    const { category } = req.query;
+    let products;
 
-  if (category && category !== 'all') {
-    products = db.prepare(
-      'SELECT * FROM products WHERE category = ?'
-    ).all(category);
-  } else {
-    products = db.prepare('SELECT * FROM products').all();
+    if (category && category !== 'all') {
+      const result = await pool.query('SELECT * FROM products WHERE category = $1', [category]);
+      products = result.rows;
+    } else {
+      const result = await pool.query('SELECT * FROM products');
+      products = result.rows;
+    }
+
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  res.json(products);
 });
 
 // GET single product
-router.get('/:id', (req, res) => {
-  const product = db.prepare(
-    'SELECT * FROM products WHERE id = ?'
-  ).get(req.params.id);
+router.get('/:id', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM products WHERE id = $1', [req.params.id]);
+    const product = result.rows[0];
 
-  if (!product) return res.status(404).json({ error: 'Product not found' });
-  res.json(product);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

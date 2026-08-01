@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const db = require('../database');
+const { pool } = require('../database');
 
-const SECRET = 'campuseats_secret_key';
+const SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
 // Middleware to check login
 function authMiddleware(req, res, next) {
@@ -17,101 +17,130 @@ function authMiddleware(req, res, next) {
   }
 }
 
+// Middleware to check role
+function requireRole(roles) {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Forbidden: Insufficient permissions' });
+    }
+    next();
+  };
+}
+
 // PLACE ORDER
-router.post('/', authMiddleware, (req, res) => {
-  const { items, total, delivery_location } = req.body;
+router.post('/', authMiddleware, async (req, res) => {
+  try {
+    const { items, total, delivery_location } = req.body;
 
-  if (!items || items.length === 0) {
-    return res.status(400).json({ error: 'Cart is empty' });
+    if (!items || items.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty' });
+    }
+
+    const orderResult = await pool.query(
+      'INSERT INTO orders (user_id, total, delivery_location, status) VALUES ($1, $2, $3, $4) RETURNING id',
+      [req.user.id, total, delivery_location || 'Campus', 'pending']
+    );
+
+    const orderId = orderResult.rows[0].id;
+
+    for (const item of items) {
+      await pool.query(
+        'INSERT INTO order_items (order_id, product_name, price, quantity, emoji) VALUES ($1, $2, $3, $4, $5)',
+        [orderId, item.name, item.price, item.qty, item.emoji]
+      );
+    }
+
+    res.json({
+      message: '🎉 Order placed successfully!',
+      order_id: orderId
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  const order = db.prepare(
-    'INSERT INTO orders (user_id, total, delivery_location, status) VALUES (?, ?, ?, ?)'
-  ).run(req.user.id, total, delivery_location || 'Campus', 'pending');
-
-  const insertItem = db.prepare(
-    'INSERT INTO order_items (order_id, product_name, price, quantity, emoji) VALUES (?, ?, ?, ?, ?)'
-  );
-
-  for (const item of items) {
-    insertItem.run(order.lastInsertRowid, item.name, item.price, item.qty, item.emoji);
-  }
-
-  res.json({
-    message: '🎉 Order placed successfully!',
-    order_id: order.lastInsertRowid
-  });
 });
 
-// GET all orders (for vendor and agent)
-router.get('/all', authMiddleware, (req, res) => {
-  const orders = db.prepare(
-    'SELECT * FROM orders ORDER BY created_at DESC'
-  ).all();
+// GET all orders (for vendor and admin)
+router.get('/all', authMiddleware, requireRole(['vendor', 'admin']), async (req, res) => {
+  try {
+    const ordersResult = await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
+    const orders = ordersResult.rows;
 
-  const ordersWithItems = orders.map(order => {
-    const items = db.prepare(
-      'SELECT * FROM order_items WHERE order_id = ?'
-    ).all(order.id);
-    return { ...order, items };
-  });
+    const ordersWithItems = await Promise.all(orders.map(async (order) => {
+      const itemsResult = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [order.id]);
+      return { ...order, items: itemsResult.rows };
+    }));
 
-  res.json(ordersWithItems);
+    res.json(ordersWithItems);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // GET my orders (for customer)
-router.get('/my', authMiddleware, (req, res) => {
-  const orders = db.prepare(
-    'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC'
-  ).all(req.user.id);
+router.get('/my', authMiddleware, async (req, res) => {
+  try {
+    const ordersResult = await pool.query(
+      'SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
+      [req.user.id]
+    );
+    const orders = ordersResult.rows;
 
-  const ordersWithItems = orders.map(order => {
-    const items = db.prepare(
-      'SELECT * FROM order_items WHERE order_id = ?'
-    ).all(order.id);
-    return { ...order, items };
-  });
+    const ordersWithItems = await Promise.all(orders.map(async (order) => {
+      const itemsResult = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [order.id]);
+      return { ...order, items: itemsResult.rows };
+    }));
 
-  res.json(ordersWithItems);
+    res.json(ordersWithItems);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // GET single order
-router.get('/:id', authMiddleware, (req, res) => {
-  const order = db.prepare(
-    'SELECT * FROM orders WHERE id = ?'
-  ).get(req.params.id);
+router.get('/:id', authMiddleware, async (req, res) => {
+  try {
+    const orderResult = await pool.query('SELECT * FROM orders WHERE id = $1', [req.params.id]);
+    const order = orderResult.rows[0];
 
-  if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (!order) return res.status(404).json({ error: 'Order not found' });
 
-  const items = db.prepare(
-    'SELECT * FROM order_items WHERE order_id = ?'
-  ).all(order.id);
+    const itemsResult = await pool.query('SELECT * FROM order_items WHERE order_id = $1', [order.id]);
 
-  res.json({ ...order, items });
+    res.json({ ...order, items: itemsResult.rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // UPDATE order status
-router.patch('/:id/status', authMiddleware, (req, res) => {
-  const { status } = req.body;
+router.patch('/:id/status', authMiddleware, requireRole(['vendor', 'agent', 'admin']), async (req, res) => {
+  try {
+    const { status } = req.body;
 
-  const validStatuses = [
-    'pending',
-    'confirmed',
-    'preparing',
-    'on_the_way',
-    'delivered',
-    'rejected'
-  ];
+    const validStatuses = [
+      'pending',
+      'confirmed',
+      'preparing',
+      'on_the_way',
+      'delivered',
+      'rejected'
+    ];
 
-  if (!validStatuses.includes(status)) {
-    return res.status(400).json({ error: 'Invalid status' });
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    await pool.query('UPDATE orders SET status = $1 WHERE id = $2', [status, req.params.id]);
+
+    res.json({ message: 'Status updated!', status });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  db.prepare(
-    'UPDATE orders SET status = ? WHERE id = ?'
-  ).run(status, req.params.id);
-
-  res.json({ message: 'Status updated!', status });
 });
 
 module.exports = router;

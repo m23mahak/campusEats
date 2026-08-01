@@ -1,0 +1,12 @@
+{
+  "name": "campuseats",
+  "version": "1.0.0",
+  "description": "CampusEats - Campus food delivery web app",
+  "scripts": {
+    "postinstall": "cd backend && npm install",
+    "start": "cd backend && node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
