@@ -60,8 +60,8 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
-// GET all orders (for vendor and admin)
-router.get('/all', authMiddleware, requireRole(['vendor', 'admin']), async (req, res) => {
+// GET all orders (for vendor, agent, and admin)
+router.get('/all', authMiddleware, requireRole(['vendor', 'agent', 'admin']), async (req, res) => {
   try {
     const ordersResult = await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
     const orders = ordersResult.rows;

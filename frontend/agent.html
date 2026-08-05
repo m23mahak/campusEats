@@ -429,7 +429,7 @@
         return;
       }
 
-      fetch(API + '/orders/my', {
+      fetch(API + '/orders/all', {
         headers: { 'Authorization': 'Bearer ' + token }
       })
       .then(res => res.json())
