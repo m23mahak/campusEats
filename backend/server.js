@@ -3,12 +3,25 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { initDB } = require('./database');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Rate Limiting Middleware: Stops spam and DDoS attacks
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { error: 'Too many requests from this IP, please try again after 15 minutes.' },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+// Apply rate limiting to all /api/ routes
+app.use('/api/', apiLimiter);
 
 // Serve frontend files
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
