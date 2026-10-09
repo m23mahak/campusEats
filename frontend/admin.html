@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusEats – Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body { background: #0f0f0f; color: #f1f1f1; }
-    .navbar { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; box-shadow: none; }
-    .navbar-logo { color: #f97316; }
-    .navbar-links a { color: #888; }
-    .navbar-links a:hover, .navbar-links a.active { color: #f97316; }
+    body {
+      background: #0f0f0f;
+      color: #f1f1f1;
+    }
+
+    .navbar {
+      background: #1a1a1a;
+      border-bottom: 1px solid #2a2a2a;
+      box-shadow: none;
+    }
+
+    .navbar-logo {
+      color: #f97316;
+    }
+
+    .navbar-links a {
+      color: #888;
+    }
+
+    .navbar-links a:hover,
+    .navbar-links a.active {
+      color: #f97316;
+    }
 
     /* ===== LAYOUT ===== */
     .admin-layout {
@@ -81,7 +100,9 @@
       transition: border-color 0.2s;
     }
 
-    .stat-card:hover { border-color: #f97316; }
+    .stat-card:hover {
+      border-color: #f97316;
+    }
 
     .stat-icon {
       font-size: 28px;
@@ -156,8 +177,13 @@
       vertical-align: middle;
     }
 
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #222; }
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #222;
+    }
 
     /* ===== BADGES ===== */
     .badge {
@@ -167,13 +193,40 @@
       font-weight: 600;
     }
 
-    .badge-pending   { background: #2a2000; color: #f59e0b; }
-    .badge-confirmed { background: #002a1a; color: #22c55e; }
-    .badge-delivered { background: #00142a; color: #38bdf8; }
-    .badge-rejected  { background: #2a0000; color: #ef4444; }
-    .badge-customer  { background: #1a1a2a; color: #818cf8; }
-    .badge-vendor    { background: #1a2a1a; color: #4ade80; }
-    .badge-agent     { background: #2a1a00; color: #fb923c; }
+    .badge-pending {
+      background: #2a2000;
+      color: #f59e0b;
+    }
+
+    .badge-confirmed {
+      background: #002a1a;
+      color: #22c55e;
+    }
+
+    .badge-delivered {
+      background: #00142a;
+      color: #38bdf8;
+    }
+
+    .badge-rejected {
+      background: #2a0000;
+      color: #ef4444;
+    }
+
+    .badge-customer {
+      background: #1a1a2a;
+      color: #818cf8;
+    }
+
+    .badge-vendor {
+      background: #1a2a1a;
+      color: #4ade80;
+    }
+
+    .badge-agent {
+      background: #2a1a00;
+      color: #fb923c;
+    }
 
     /* ===== ACTION BUTTONS ===== */
     .action-btn {
@@ -186,10 +239,24 @@
       transition: opacity 0.2s;
     }
 
-    .action-btn:hover { opacity: 0.8; }
-    .btn-green  { background: #22c55e; color: white; }
-    .btn-red    { background: #ef4444; color: white; }
-    .btn-orange { background: #f97316; color: white; }
+    .action-btn:hover {
+      opacity: 0.8;
+    }
+
+    .btn-green {
+      background: #22c55e;
+      color: white;
+    }
+
+    .btn-red {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-orange {
+      background: #f97316;
+      color: white;
+    }
 
     /* ===== CHART BARS ===== */
     .chart-bars {
@@ -253,8 +320,13 @@
     }
 
     /* ===== HIDDEN PAGES ===== */
-    .admin-page { display: none; }
-    .admin-page.active { display: block; }
+    .admin-page {
+      display: none;
+    }
+
+    .admin-page.active {
+      display: block;
+    }
 
     /* ===== QUICK ACTIONS ===== */
     .quick-actions {
@@ -279,10 +351,18 @@
       background: #2a1a0a;
     }
 
-    .quick-action div:first-child { font-size: 24px; margin-bottom: 6px; }
-    .quick-action div:last-child  { font-size: 13px; color: #888; }
+    .quick-action div:first-child {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .quick-action div:last-child {
+      font-size: 13px;
+      color: #888;
+    }
   </style>
 </head>
+
 <body>
 
   <!-- Navbar -->
@@ -364,16 +444,20 @@
           </div>
           <div class="quick-actions">
             <div class="quick-action" onclick="showPage('orders', document.querySelector('[onclick*=orders]'))">
-              <div>📦</div><div>View Orders</div>
+              <div>📦</div>
+              <div>View Orders</div>
             </div>
             <div class="quick-action" onclick="showPage('users', document.querySelector('[onclick*=users]'))">
-              <div>👥</div><div>Manage Users</div>
+              <div>👥</div>
+              <div>Manage Users</div>
             </div>
             <div class="quick-action" onclick="showPage('vendors', document.querySelector('[onclick*=vendors]'))">
-              <div>🍽️</div><div>Approve Vendors</div>
+              <div>🍽️</div>
+              <div>Approve Vendors</div>
             </div>
             <div class="quick-action" onclick="showPage('reports', document.querySelector('[onclick*=reports]'))">
-              <div>📈</div><div>View Reports</div>
+              <div>📈</div>
+              <div>View Reports</div>
             </div>
           </div>
         </div>
@@ -390,7 +474,8 @@
         <div class="section-card">
           <div class="section-card-header">
             <h3>🕐 Recent Orders</h3>
-            <button class="action-btn btn-orange" onclick="showPage('orders', document.querySelector('[onclick*=orders]'))">
+            <button class="action-btn btn-orange"
+              onclick="showPage('orders', document.querySelector('[onclick*=orders]'))">
               View All
             </button>
           </div>
@@ -488,10 +573,8 @@
         <div class="section-card">
           <div class="section-card-header">
             <h3>All Products</h3>
-            <input type="text" id="product-search"
-              placeholder="Search products..."
-              oninput="searchProducts()"
-              style="background:#222; border:1px solid #2a2a2a; border-radius:8px; padding:8px 14px; color:#f1f1f1; font-size:13px; outline:none; width:200px;"/>
+            <input type="text" id="product-search" placeholder="Search products..." oninput="searchProducts()"
+              style="background:#222; border:1px solid #2a2a2a; border-radius:8px; padding:8px 14px; color:#f1f1f1; font-size:13px; outline:none; width:200px;" />
           </div>
           <table>
             <thead>
@@ -557,7 +640,9 @@
         </div>
 
         <div class="section-card">
-          <div class="section-card-header"><h3>📊 Top Selling Items</h3></div>
+          <div class="section-card-header">
+            <h3>📊 Top Selling Items</h3>
+          </div>
           <table>
             <thead>
               <tr>
@@ -568,17 +653,44 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>🍜 Maggi Noodles</td><td>48</td><td>₹1,440</td><td style="color:#22c55e;">↑ Trending</td></tr>
-              <tr><td>🍚 Chicken Biryani</td><td>42</td><td>₹3,780</td><td style="color:#22c55e;">↑ Popular</td></tr>
-              <tr><td>☕ Masala Chai</td><td>38</td><td>₹570</td><td style="color:#22c55e;">↑ Steady</td></tr>
-              <tr><td>🥙 Chole Bhature</td><td>30</td><td>₹2,100</td><td style="color:#f59e0b;">→ Stable</td></tr>
-              <tr><td>🥨 Samosa</td><td>28</td><td>₹560</td><td style="color:#22c55e;">↑ Rising</td></tr>
+              <tr>
+                <td>🍜 Maggi Noodles</td>
+                <td>48</td>
+                <td>₹1,440</td>
+                <td style="color:#22c55e;">↑ Trending</td>
+              </tr>
+              <tr>
+                <td>🍚 Chicken Biryani</td>
+                <td>42</td>
+                <td>₹3,780</td>
+                <td style="color:#22c55e;">↑ Popular</td>
+              </tr>
+              <tr>
+                <td>☕ Masala Chai</td>
+                <td>38</td>
+                <td>₹570</td>
+                <td style="color:#22c55e;">↑ Steady</td>
+              </tr>
+              <tr>
+                <td>🥙 Chole Bhature</td>
+                <td>30</td>
+                <td>₹2,100</td>
+                <td style="color:#f59e0b;">→ Stable</td>
+              </tr>
+              <tr>
+                <td>🥨 Samosa</td>
+                <td>28</td>
+                <td>₹560</td>
+                <td style="color:#22c55e;">↑ Rising</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="section-card">
-          <div class="section-card-header"><h3>📅 Daily Revenue Chart</h3></div>
+          <div class="section-card-header">
+            <h3>📅 Daily Revenue Chart</h3>
+          </div>
           <div class="chart-bars" id="reportChart"></div>
         </div>
       </div>
@@ -592,39 +704,39 @@
 
     // ===== DUMMY DATA =====
     const dummyOrders = [
-      { id: 1042, customer: 'Rahul S.',  items: 'Veg Thali, Chai',        total: 45,  location: 'Hostel B-204', status: 'delivered', time: '10 min ago' },
-      { id: 1043, customer: 'Priya M.',  items: 'Chicken Biryani',        total: 90,  location: 'Library R3',   status: 'confirmed', time: '18 min ago' },
-      { id: 1044, customer: 'Arjun K.',  items: 'Maggi, Cold Coffee',     total: 70,  location: 'Eng Block 101',status: 'pending',   time: '25 min ago' },
-      { id: 1045, customer: 'Sneha P.',  items: 'Masala Dosa, Lassi',     total: 85,  location: 'Girls Hostel', status: 'delivered', time: '32 min ago' },
-      { id: 1046, customer: 'Dev R.',    items: 'A4 Notebook, Pen Set',   total: 70,  location: 'Lab 3',        status: 'pending',   time: '40 min ago' },
-      { id: 1047, customer: 'Anika T.',  items: 'Vada Pav x2, Chai',     total: 45,  location: 'Canteen Area', status: 'confirmed', time: '52 min ago' },
-      { id: 1048, customer: 'Rohan V.',  items: 'Lunch Box Special',      total: 80,  location: 'Hostel A-102', status: 'rejected',  time: '1 hr ago'   },
+      { id: 1042, customer: 'Rahul S.', items: 'Veg Thali, Chai', total: 45, location: 'Hostel B-204', status: 'delivered', time: '10 min ago' },
+      { id: 1043, customer: 'Priya M.', items: 'Chicken Biryani', total: 90, location: 'Library R3', status: 'confirmed', time: '18 min ago' },
+      { id: 1044, customer: 'Arjun K.', items: 'Maggi, Cold Coffee', total: 70, location: 'Eng Block 101', status: 'pending', time: '25 min ago' },
+      { id: 1045, customer: 'Sneha P.', items: 'Masala Dosa, Lassi', total: 85, location: 'Girls Hostel', status: 'delivered', time: '32 min ago' },
+      { id: 1046, customer: 'Dev R.', items: 'A4 Notebook, Pen Set', total: 70, location: 'Lab 3', status: 'pending', time: '40 min ago' },
+      { id: 1047, customer: 'Anika T.', items: 'Vada Pav x2, Chai', total: 45, location: 'Canteen Area', status: 'confirmed', time: '52 min ago' },
+      { id: 1048, customer: 'Rohan V.', items: 'Lunch Box Special', total: 80, location: 'Hostel A-102', status: 'rejected', time: '1 hr ago' },
     ];
 
     const dummyUsers = [
-      { id: 1, name: 'Rahul Sharma',   email: 'rahul@college.edu',  role: 'customer', joined: 'Jan 10, 2025' },
-      { id: 2, name: 'Priya Mehta',    email: 'priya@college.edu',  role: 'customer', joined: 'Jan 12, 2025' },
-      { id: 3, name: 'Main Cafeteria', email: 'cafe@campus.edu',    role: 'vendor',   joined: 'Dec 1, 2024'  },
-      { id: 4, name: 'Rahul K.',       email: 'agent1@campus.edu',  role: 'agent',    joined: 'Dec 5, 2024'  },
-      { id: 5, name: 'Arjun Kumar',    email: 'arjun@college.edu',  role: 'customer', joined: 'Feb 2, 2025'  },
-      { id: 6, name: 'Tea Stall',      email: 'tea@campus.edu',     role: 'vendor',   joined: 'Dec 3, 2024'  },
+      { id: 1, name: 'Rahul Sharma', email: 'rahul@college.edu', role: 'customer', joined: 'Jan 10, 2025' },
+      { id: 2, name: 'Priya Mehta', email: 'priya@college.edu', role: 'customer', joined: 'Jan 12, 2025' },
+      { id: 3, name: 'Main Cafeteria', email: 'cafe@campus.edu', role: 'vendor', joined: 'Dec 1, 2024' },
+      { id: 4, name: 'Rahul K.', email: 'agent1@campus.edu', role: 'agent', joined: 'Dec 5, 2024' },
+      { id: 5, name: 'Arjun Kumar', email: 'arjun@college.edu', role: 'customer', joined: 'Feb 2, 2025' },
+      { id: 6, name: 'Tea Stall', email: 'tea@campus.edu', role: 'vendor', joined: 'Dec 3, 2024' },
     ];
 
     const dummyVendors = [
-      { name: '🍛 Main Cafeteria', category: 'Food',      orders: 82,  revenue: '₹12,400', rating: 4.8, status: 'active'  },
-      { name: '☕ Tea Stall',      category: 'Beverages', orders: 64,  revenue: '₹3,200',  rating: 4.9, status: 'active'  },
-      { name: '🍕 Campus Canteen', category: 'Fast Food', orders: 48,  revenue: '₹6,800',  rating: 4.5, status: 'active'  },
-      { name: '🏠 Hostel Kitchen', category: 'Food',      orders: 36,  revenue: '₹5,400',  rating: 4.7, status: 'active'  },
-      { name: '🌿 South Corner',   category: 'South Food',orders: 24,  revenue: '₹3,600',  rating: 4.8, status: 'pending' },
-      { name: '💊 Medical Store',  category: 'Medicine',  orders: 12,  revenue: '₹1,200',  rating: 4.6, status: 'pending' },
+      { name: '🍛 Main Cafeteria', category: 'Food', orders: 82, revenue: '₹12,400', rating: 4.8, status: 'active' },
+      { name: '☕ Tea Stall', category: 'Beverages', orders: 64, revenue: '₹3,200', rating: 4.9, status: 'active' },
+      { name: '🍕 Campus Canteen', category: 'Fast Food', orders: 48, revenue: '₹6,800', rating: 4.5, status: 'active' },
+      { name: '🏠 Hostel Kitchen', category: 'Food', orders: 36, revenue: '₹5,400', rating: 4.7, status: 'active' },
+      { name: '🌿 South Corner', category: 'South Food', orders: 24, revenue: '₹3,600', rating: 4.8, status: 'pending' },
+      { name: '💊 Medical Store', category: 'Medicine', orders: 12, revenue: '₹1,200', rating: 4.6, status: 'pending' },
     ];
 
     const dummyAgents = [
-      { name: '🧑 Rahul K.',  deliveries: 8, earnings: '₹200', rating: 4.9, status: 'on delivery' },
-      { name: '👦 Amit S.',   deliveries: 6, earnings: '₹150', rating: 4.7, status: 'available'   },
-      { name: '🧑 Vijay R.',  deliveries: 5, earnings: '₹125', rating: 4.8, status: 'on delivery' },
-      { name: '👦 Suresh P.', deliveries: 4, earnings: '₹100', rating: 4.6, status: 'available'   },
-      { name: '🧑 Karan M.',  deliveries: 3, earnings: '₹75',  rating: 4.5, status: 'offline'     },
+      { name: '🧑 Rahul K.', deliveries: 8, earnings: '₹200', rating: 4.9, status: 'on delivery' },
+      { name: '👦 Amit S.', deliveries: 6, earnings: '₹150', rating: 4.7, status: 'available' },
+      { name: '🧑 Vijay R.', deliveries: 5, earnings: '₹125', rating: 4.8, status: 'on delivery' },
+      { name: '👦 Suresh P.', deliveries: 4, earnings: '₹100', rating: 4.6, status: 'available' },
+      { name: '🧑 Karan M.', deliveries: 3, earnings: '₹75', rating: 4.5, status: 'offline' },
     ];
 
     const weekRevenue = [
@@ -652,7 +764,7 @@
       if (!container) return;
       container.innerHTML = data.map(d => `
         <div class="bar-group">
-          <div class="bar-value">₹${(d.amount/1000).toFixed(1)}k</div>
+          <div class="bar-value">₹${(d.amount / 1000).toFixed(1)}k</div>
           <div class="bar" style="height:${(d.amount / max) * 90}px"></div>
           <div class="bar-label">${d.day}</div>
         </div>
@@ -746,17 +858,17 @@
           <td style="color:#f59e0b;">⭐ ${v.rating}</td>
           <td>
             <span class="badge" style="${v.status === 'active'
-              ? 'background:#002a1a; color:#22c55e;'
-              : 'background:#2a2000; color:#f59e0b;'}">
+          ? 'background:#002a1a; color:#22c55e;'
+          : 'background:#2a2000; color:#f59e0b;'}">
               ${v.status}
             </span>
           </td>
           <td>
             <div style="display:flex; gap:6px;">
               ${v.status === 'pending'
-                ? `<button class="action-btn btn-green" onclick="approveVendor(this, '${v.name}')">Approve</button>`
-                : `<button class="action-btn btn-orange" onclick="showToast('${v.name} suspended!')">Suspend</button>`
-              }
+          ? `<button class="action-btn btn-green" onclick="approveVendor(this, '${v.name}')">Approve</button>`
+          : `<button class="action-btn btn-orange" onclick="showToast('${v.name} suspended!')">Suspend</button>`
+        }
             </div>
           </td>
         </tr>
@@ -808,11 +920,10 @@
           <td style="color:#22c55e; font-weight:600;">${a.earnings}</td>
           <td style="color:#f59e0b;">⭐ ${a.rating}</td>
           <td>
-            <span class="badge" style="${
-              a.status === 'available'   ? 'background:#002a1a; color:#22c55e;'  :
-              a.status === 'on delivery' ? 'background:#2a1a00; color:#fb923c;'  :
-                                          'background:#222; color:#555;'
-            }">${a.status}</span>
+            <span class="badge" style="${a.status === 'available' ? 'background:#002a1a; color:#22c55e;' :
+          a.status === 'on delivery' ? 'background:#2a1a00; color:#fb923c;' :
+            'background:#222; color:#555;'
+        }">${a.status}</span>
           </td>
           <td>
             <button class="action-btn btn-red" onclick="showToast('${a.name} removed!')">Remove</button>
@@ -842,15 +953,15 @@
       fetch(API + '/orders/my', {
         headers: { 'Authorization': 'Bearer ' + token }
       })
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          document.getElementById('stat-orders').textContent = data.length;
-          const revenue = data.reduce((sum, o) => sum + o.total, 0);
-          document.getElementById('stat-revenue').textContent = '₹' + revenue;
-        }
-      })
-      .catch(() => {});
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            document.getElementById('stat-orders').textContent = data.length;
+            const revenue = data.reduce((sum, o) => sum + o.total, 0);
+            document.getElementById('stat-revenue').textContent = '₹' + revenue;
+          }
+        })
+        .catch(() => { });
     }
 
     // ===== INIT =====
@@ -867,4 +978,5 @@
   </script>
 
 </body>
+
 </html>
